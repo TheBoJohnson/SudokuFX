@@ -5,10 +5,12 @@ import javafx.stage.Stage;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.HPos;
 
 public class View extends Application {
 	@Override
@@ -21,13 +23,14 @@ public class View extends Application {
 		primaryStage.setHeight(500);
 		primaryStage.setWidth(500);
 
-
 		GridPane gridPane = new GridPane();
 		gridPane.setHgap(1);
 		gridPane.setVgap(1);
 		gridPane.setPadding(new Insets(10, 10, 10, 10));
 		gridPane.setAlignment(Pos.CENTER);
 		gridPane.setGridLinesVisible(true);
+
+		Font cellFont = new Font("Arial", 25);
 		
 		//gridPane.setHgap(25);
 
@@ -47,7 +50,12 @@ public class View extends Application {
 				GridPane.setConstraints(label, i, j);
 				gridPane.getChildren().add(label);
 				*/
-				gridPane.add(new Label("1"), i, j);
+				Text cellText = new Text("1");
+				cellText.setTextAlignment(TextAlignment.CENTER);
+				cellText.setFont(cellFont);
+				
+				GridPane.setHalignment(cellText, HPos.CENTER);
+				gridPane.add(cellText, i, j);
 			}
 		}
 
