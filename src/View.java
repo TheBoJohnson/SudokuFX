@@ -15,51 +15,56 @@ import javafx.geometry.HPos;
 public class View extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		int winHeight = 500;
+		int winWidth = 1000;
+
 		int numCols = 9;
 		int numRows = 9;
-		int cellSize = 40;
+		int cellSize = 120;
 
-		primaryStage.setTitle("My First JavaFX App");
-		primaryStage.setHeight(500);
-		primaryStage.setWidth(500);
+		primaryStage.setTitle("SudokuFX");
+		primaryStage.setHeight(winHeight);
+		primaryStage.setWidth(winWidth);
 
-		GridPane gridPane = new GridPane();
-		gridPane.setHgap(1);
-		gridPane.setVgap(1);
-		gridPane.setPadding(new Insets(10, 10, 10, 10));
-		gridPane.setAlignment(Pos.CENTER);
-		gridPane.setGridLinesVisible(true);
-
-		Font cellFont = new Font("Arial", 25);
+		// The outer grid of the Sudoku grid that will be 3x3
+		int outerGridCols = 3;
+		int outerGridRows = outerGridCols;
 		
-		//gridPane.setHgap(25);
+		GridPane outerGrid = new GridPane();
+		outerGrid.setPadding(new Insets(10, 10, 10, 10));
+		outerGrid.setAlignment(Pos.CENTER);
 
-		// Setitng up the grid for Sudoku
-		for(int i = 0; i < numCols; i++) {
-			gridPane.getColumnConstraints().add(new ColumnConstraints(cellSize));
+		for(int i = 0; i < outerGridCols; i++) {
+			outerGrid.getColumnConstraints().add(new ColumnConstraints(cellSize));
 		}
 
-		for(int i = 0; i < numRows; i++) {
-			gridPane.getRowConstraints().add(new RowConstraints(cellSize));
+		for(int i = 0; i < outerGridRows; i++) {
+			outerGrid.getRowConstraints().add(new RowConstraints(cellSize));
 		}
 
-		for(int i = 0; i < numCols; i++) {
-			for(int j = 0; j < numRows; j++) {
-				/*
-				Label label = new Label("1");
-				GridPane.setConstraints(label, i, j);
-				gridPane.getChildren().add(label);
-				*/
-				Text cellText = new Text("1");
-				cellText.setTextAlignment(TextAlignment.CENTER);
-				cellText.setFont(cellFont);
-				
-				GridPane.setHalignment(cellText, HPos.CENTER);
-				gridPane.add(cellText, i, j);
+		// Adding the empty panes
+		Pane[] squares = new Pane[9];
+
+		for(int i = 0; i < squares.length; i++) {
+			squares[i] = new Pane(new Label((i + 1) + ""));
+			squares[i].getStyleClass().add("square-" + (i + 1));
+		}
+
+
+		int count = 0;
+
+		for(int i = 0; i < outerGridCols; i++) {
+			for(int j = 0; j < outerGridRows; j++) {
+				outerGrid.add(squares[count++], j, i);
 			}
 		}
 
-		Scene scene = new Scene(gridPane);
+		// Outermost holder layout
+		HBox holder = new HBox();
+		holder.getChildren().addAll(outerGrid);
+
+		Scene scene = new Scene(holder);
+		scene.getStylesheets().add("Styles/layoutstyles.css");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 

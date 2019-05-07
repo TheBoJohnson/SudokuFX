@@ -1,0 +1,37 @@
+.square-1 {
+  -fx-border-color: black;
+  -fx-border-width: 5px 1px 1px 5px;
+}
+
+.square-2 {
+  -fx-border-color: black;
+  -fx-border-width: 5px 1px 1px 0;
+}
+.square-3 {
+  -fx-border-color: black;
+  -fx-border-width: 5px 5px 1px 0;
+}
+.square-4 {
+  -fx-border-color: black;
+  -fx-border-width: 0 1px 1px 5px;
+}
+.square-5 {
+  -fx-border-color: black;
+  -fx-border-width: 0 1px 1px 0;
+}
+.square-6 {
+  -fx-border-color: black;
+  -fx-border-width: 0 5px 1px 0;
+}
+.square-7 {
+  -fx-border-color: black;
+  -fx-border-width: 0 1px 5px 5px;
+}
+.square-8 {
+  -fx-border-color: black;
+  -fx-border-width: 0 1px 5px 0;
+}
+.square-9 {
+  -fx-border-color: black;
+  -fx-border-width: 0 5px 5px 0;
+}
