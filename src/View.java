@@ -1,4 +1,6 @@
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -8,6 +10,8 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.input.MouseEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.HPos;
@@ -23,16 +27,17 @@ public class View extends Application {
 		primaryStage.setHeight(winHeight);
 		primaryStage.setWidth(winWidth);
 
+		// Setting up the Sudoku Grid
 		GridPane outerGrid = new GridPane();
 		Pane[] outerCells = new Pane[9];
 		GridPane[] innerGrids = new GridPane[9];
-		Pane[][] innerCells = new Pane[9][9];
+		StackPane[][] innerCells = new StackPane[9][9];
 
 		setUpGrid(outerGrid, outerCells, innerGrids, innerCells);
 
 		// Outermost holder layout
 		HBox holder = new HBox();
-		holder.getChildren().addAll(outerGrid);
+		holder.getChildren().add(outerGrid);
 
 		Scene scene = new Scene(holder);
 		scene.getStylesheets().add("Styles/layoutstyles.css");
@@ -40,7 +45,9 @@ public class View extends Application {
 		primaryStage.show();
 
 	}
-	public void setUpGrid(GridPane outerGrid, Pane[] outerCells, GridPane[] innerGrids, Pane[][] innerCells) {
+
+	// Grid Set up Methods
+	public void setUpGrid(GridPane outerGrid, Pane[] outerCells, GridPane[] innerGrids, StackPane[][] innerCells) {
 		int cellSize = 200;
 		int innerCellSize = cellSize / 3;
 
@@ -51,7 +58,7 @@ public class View extends Application {
 
 		// adding the innerGrids to the outerCells
 		for(int i = 0; i < outerCells.length; i++) {
-			outerCells[i].getChildren().addAll(innerGrids[i]);
+			outerCells[i].getChildren().add(innerGrids[i]);
 		}
 
 		// adding the innerCells to the innerGrids
@@ -116,10 +123,18 @@ public class View extends Application {
 		}
 	}
 
-	public void setupInnerCells(Pane[][] innerCells) {
+	public void setupInnerCells(StackPane[][] innerCells) {
 		for(int i = 0; i < innerCells.length; i++) {
 			for(int j = 0; j < innerCells[0].length; j++) {
-				innerCells[i][j] = new Pane();;
+				innerCells[i][j] = new StackPane();
+				innerCells[i][j].getChildren().add(new Text("1"));
+
+				innerCells[i][j].addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+						public void handle(MouseEvent event) {
+							System.out.println("Connected");
+						}
+					});
+
 				innerCells[i][j].getStyleClass().add("inner-grid");
 			}
 		}
