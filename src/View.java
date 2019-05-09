@@ -15,8 +15,18 @@ import javafx.scene.input.MouseEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.HPos;
+import javafx.scene.paint.Color;
+import javafx.scene.text.FontPosture;
+import javafx.event.EventTarget;
+
+
 
 public class View extends Application {
+	public static Model model;
+	public static Font editableFont;
+	public static Font nonEditableFont;
+	
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// Setting up the Main Window
@@ -33,7 +43,7 @@ public class View extends Application {
 		GridPane[] innerGrids = new GridPane[9];
 		StackPane[][] innerCells = new StackPane[9][9];
 
-		setUpGrid(outerGrid, outerCells, innerGrids, innerCells);
+		setUpGrid(outerGrid, outerCells, innerGrids, innerCells, model);
 
 		// Outermost holder layout
 		HBox holder = new HBox();
@@ -43,18 +53,17 @@ public class View extends Application {
 		scene.getStylesheets().add("Styles/layoutstyles.css");
 		primaryStage.setScene(scene);
 		primaryStage.show();
-
 	}
 
 	// Grid Set up Methods
-	public void setUpGrid(GridPane outerGrid, Pane[] outerCells, GridPane[] innerGrids, StackPane[][] innerCells) {
+	public void setUpGrid(GridPane outerGrid, Pane[] outerCells, GridPane[] innerGrids, StackPane[][] innerCells, Model theModel) {
 		int cellSize = 200;
 		int innerCellSize = cellSize / 3;
 
 		setupOuterGrid(outerGrid, cellSize);
 		setupOuterCells(outerCells);
 		setupInnerGrids(innerGrids, innerCellSize);
-		setupInnerCells(innerCells);
+		setupInnerCells(innerCells, theModel);
 
 		// adding the innerGrids to the outerCells
 		for(int i = 0; i < outerCells.length; i++) {
@@ -123,15 +132,64 @@ public class View extends Application {
 		}
 	}
 
-	public void setupInnerCells(StackPane[][] innerCells) {
+	public void setupInnerCells(StackPane[][] innerCells, Model theModel) {
+		// Get the Models Data
+		int[][] thePuzzleGrid = theModel.getPuzzleGrid();
+		boolean[][] theEditableCells = theModel.getEditableCells();
+
 		for(int i = 0; i < innerCells.length; i++) {
 			for(int j = 0; j < innerCells[0].length; j++) {
 				innerCells[i][j] = new StackPane();
-				innerCells[i][j].getChildren().add(new Text("1"));
+				Text cellText = new Text("");
 
+				if (thePuzzleGrid[i][j] != 0) {
+					cellText.setText(thePuzzleGrid[i][j] + "");
+					cellText.setFont(nonEditableFont);
+				} else {
+					cellText.setFont(editableFont);
+					cellText.setFill(Color.BLUE);
+				}
+
+				innerCells[i][j].getChildren().add(cellText);
+
+				//innerCells[i][j].addEventFilter(MouseEvent.MOUSE_CLICKED, new Controller.CellClickHandler());
 				innerCells[i][j].addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 						public void handle(MouseEvent event) {
-							System.out.println("Connected");
+							StackPane theEventTarget = null;
+							Text theTargetText = null;
+
+							// Remove the selected class from the old selected cell
+							Tuple oldSelected = model.getSelectedIndexTuple();
+							int selectedRowIndex = oldSelected.getFirst();
+							int selectedColIndex = oldSelected.getSecond();
+
+							if (selectedRowIndex != -1 && selectedColIndex != -1) {
+								innerCells[selectedRowIndex][selectedColIndex].getStyleClass().remove("selected-grid");
+							}
+
+							if (event.getTarget() instanceof Text) {
+								theTargetText = (Text) event.getTarget();
+
+								for(int i = 0; i < innerCells.length; i++) {
+									for(int j = 0; j < innerCells[0].length; j++) {
+										if (innerCells[i][j].getChildren().get(0).equals(theTargetText)) {
+											model.setSelected(i, j);
+											innerCells[i][j].getStyleClass().add("selected-grid");
+										}
+
+									}
+								}
+							} else {
+								theEventTarget = (StackPane) event.getTarget();
+								for (int i = 0; i < innerCells.length; i++) {
+									for(int j = 0; j < innerCells[0].length; j++) {
+										if (innerCells[i][j].equals(theEventTarget)) {
+											model.setSelected(i, j);
+											innerCells[i][j].getStyleClass().add("selected-grid");
+										}
+									}
+								}
+							}
 						}
 					});
 
@@ -141,6 +199,12 @@ public class View extends Application {
 	}
 
 	public static void main(String[] args) {
+		// Setting up the model before launching the application
+		model = new Model();
+		model.loadPuzzleFromFile("test.txt");
+		editableFont = Font.font("Arial", FontPosture.ITALIC, 20);
+		nonEditableFont = new Font("Arial", 20);
+
 		Application.launch(args);
 	}
 }

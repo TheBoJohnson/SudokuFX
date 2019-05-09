@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.InputMismatchException;
 
@@ -7,14 +6,16 @@ public class Model {
 	private int[][] puzzleGrid;
 	private boolean[][] editableCells;
 	private boolean shouldWarn;
+	private Tuple selectedIndexTuple;
 
 	public static final String ANSI_RESET = "\u001B[0m";
 	public static final String ANSI_RED = "\u001B[31m";
 
-	public Puzzle() {
+	public Model() {
 		puzzleGrid = new int[9][9];
 		editableCells = new boolean[9][9];
 		shouldWarn = true;
+		selectedIndexTuple = new Tuple();
 
 		for(int i = 0; i < 9; i++) {
 			for(int j = 0; j < 9; j++) {
@@ -28,8 +29,25 @@ public class Model {
 		shouldWarn = !shouldWarn;
 	}
 
+	// Accessor Methods
+	public int[][] getPuzzleGrid() {
+		return puzzleGrid;
+	}
+
+	public boolean[][] getEditableCells() {
+		return editableCells;
+	}
+
 	public boolean getShouldWarn() {
 		return shouldWarn;
+	}
+
+	public Tuple getSelectedIndexTuple() {
+		return selectedIndexTuple; 
+	}
+
+	public void setSelected(int row, int col) {
+		selectedIndexTuple.setTuple(row, col);
 	}
 
 	public boolean makeMove(int row, int col, int newNum) {

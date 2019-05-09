@@ -58,3 +58,8 @@ root {
   -fx-border-color: #ccc;
   -fx-border-width: 0 1px 1px 0;
 }
+
+.selected-grid {
+  -fx-border-color: #FFC627;
+  -fx-border-width: 2px 2px 2px 2px;
+}
