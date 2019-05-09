@@ -31,7 +31,7 @@ public class View extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// Setting up the Main Window
 		int winHeight = 1000;
-		int winWidth = 1000;
+		int winWidth = 1500;
 
 		primaryStage.setTitle("SudokuFX");
 		primaryStage.setHeight(winHeight);
@@ -45,9 +45,14 @@ public class View extends Application {
 
 		setUpGrid(outerGrid, outerCells, innerGrids, innerCells, model);
 
+		// Setting up the right hand side controls
+		GridPane buttonGrid = new GridPane();
+		Button[] buttons = new Button[9];
+		setUpButtonGrid(buttonGrid, buttons);
+
 		// Outermost holder layout
 		HBox holder = new HBox();
-		holder.getChildren().add(outerGrid);
+		holder.getChildren().addAll(outerGrid, buttonGrid);
 
 		Scene scene = new Scene(holder);
 		scene.getStylesheets().add("Styles/layoutstyles.css");
@@ -102,7 +107,7 @@ public class View extends Application {
 	public void setupOuterGrid(GridPane outerGrid, int cellSize) {
 		int outerGridDimen = 3;
 
-		outerGrid.setPadding(new Insets(10, 10, 10, 10));
+		outerGrid.setPadding(new Insets(90));
 		outerGrid.setAlignment(Pos.CENTER);
 
 		for(int i = 0; i < outerGridDimen; i++) {
@@ -195,6 +200,37 @@ public class View extends Application {
 
 				innerCells[i][j].getStyleClass().add("inner-grid");
 			}
+		}
+	}
+
+	// Button Grid Set up Methods
+	public void setUpButtonGrid(GridPane buttonGrid, Button[] buttons) {
+		int gridDimen = 3;
+		int gridSize = 125;
+
+		for(int i = 0; i < gridDimen; i++) {
+			buttonGrid.getColumnConstraints().add(new ColumnConstraints(gridSize));
+			buttonGrid.getRowConstraints().add(new RowConstraints(gridSize));
+		}
+
+		// Adding the Buttons
+		setupButtons(buttons, gridSize);
+
+		int buttonIndex = 0;
+		for(int i = 0; i < gridDimen; i++) {
+			for(int j = 0; j < gridDimen; j++) {
+				buttonGrid.add(buttons[buttonIndex++], j, i);
+			}
+		}
+
+		buttonGrid.setPadding(new Insets(90));
+		buttonGrid.setAlignment(Pos.CENTER);
+	}
+
+	public void setupButtons(Button[] buttons, int gridSize) {
+		for(int i = 0; i < buttons.length; i++) {
+			buttons[i] = new Button((i + 1) + "");
+			buttons[i].setPrefSize(gridSize, gridSize);
 		}
 	}
 
