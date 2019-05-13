@@ -126,7 +126,7 @@ public class View extends Application {
 				public void handle(ActionEvent event) {
 					FileChooser fileChooser = new FileChooser();
 					fileChooser.setTitle("Save Your Game");
-					fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Game Files", "*.txt"));
+					fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Game Files", "*.bin"));
 					fileChooser.setInitialDirectory(new File("/home/bo/Documents/Projects/Java/Sudoku/Saved Games"));
 
 					File selectedFile = fileChooser.showSaveDialog(primaryStage);
@@ -181,7 +181,8 @@ public class View extends Application {
 				public void handle(ActionEvent event) {
 					FileChooser fileChooser = new FileChooser();
 					fileChooser.setTitle("Choose A Puzzle to Start");
-					fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Game Files", "*.txt"));
+					fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Puzzle Files", "*.txt"));
+					fileChooser.setInitialDirectory(new File("/home/bo/Documents/Projects/Java/Sudoku/Puzzles"));
 
 					File selectedFile = fileChooser.showOpenDialog(primaryStage);
 
@@ -189,7 +190,6 @@ public class View extends Application {
 						// Load the selected file as the new puzzle
 						model = new Model();
 						model.loadPuzzleFromFile(selectedFile.toString());
-						model.printPuzzle();
 						setUpGrid(outerGrid, outerCells, innerGrids, innerCells, model);
 						primaryStage.setScene(gameScene);
 					}
@@ -204,7 +204,9 @@ public class View extends Application {
 				public void handle(ActionEvent event) {
 					FileChooser fileChooser = new FileChooser();
 					fileChooser.setTitle("Choose A Save File to Load");
-					fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Game Files", "*.txt"));
+					fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Game Files", "*.bin"));
+					fileChooser.setInitialDirectory(new File("/home/bo/Documents/Projects/Java/Sudoku/Saved Games"));
+					fileChooser.setInitialFileName(".bin");
 
 					File selectedFile = fileChooser.showOpenDialog(primaryStage);
 
