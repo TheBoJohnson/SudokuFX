@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.regex.Pattern;
 import java.util.InputMismatchException;
 
-public class Model {
+public class Model implements Serializable {
 	private int[][] puzzleGrid;
 	private boolean[][] editableCells;
 	private boolean shouldWarn;
@@ -22,6 +22,23 @@ public class Model {
 				puzzleGrid[i][j] = 0;
 				editableCells[i][j] = false;
 			}
+		}
+	}
+
+	public void saveGameState(String saveFileName) {
+		try {
+			FileOutputStream fileOut = new FileOutputStream(saveFileName);
+			ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+
+			objectOut.writeObject(this);
+
+			System.out.println(saveFileName + " has been written");
+
+			objectOut.close();
+			fileOut.close();
+			
+		} catch(IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -48,6 +65,27 @@ public class Model {
 
 	public void setSelected(int row, int col) {
 		selectedIndexTuple.setTuple(row, col);
+	}
+
+	public boolean clearCell(int row, int col) {
+		if (row < 0 || row > 8) {
+			System.out.println("The row index is invalid");
+			return false;
+		}
+
+		if (col < 0 || col > 8) {
+			System.out.println("The col index is invalid");
+			return false;
+		}
+
+		if (!editableCells[row][col]) {
+			System.out.println("That cell was apart of the original puzzle");
+			return false;
+		}
+
+		puzzleGrid[row][col] = 0;
+
+		return true;
 	}
 
 	public boolean makeMove(int row, int col, int newNum) {

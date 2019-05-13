@@ -1,4 +1,6 @@
-public class Tuple {
+import java.io.Serializable;
+
+public class Tuple implements Serializable {
 	private int first;
 	private int second;
 

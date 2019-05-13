@@ -63,3 +63,13 @@ root {
   -fx-border-color: #FFC627;
   -fx-border-width: 2px 2px 2px 2px;
 }
+
+.warnings-on-btn {
+  -fx-border-color: green;
+  -fx-background-color: green;
+}
+
+.warnings-off-btn {
+  -fx-border-color: red;
+  -fx-background-color: red;
+}
