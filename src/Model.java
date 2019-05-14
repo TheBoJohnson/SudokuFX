@@ -247,6 +247,10 @@ public class Model implements Serializable {
 
 	// Methods to check to see if a final solution is correct
 	public boolean validatePuzzle() {
+		System.out.println("Rows:" + validateRows());
+		System.out.println("Cols:" + validateCols());
+		System.out.println("Squares:" + validateSquares());
+
 		return validateRows() && validateCols() && validateSquares();
 	}
 
@@ -311,7 +315,7 @@ public class Model implements Serializable {
 				}
 				for(int k = 0; k < 3; k++) {
 					for(int l = 0; l < 3; l++) {
-						if (puzzleGrid[i + k][j + l] - 1 == 0 || !canUse[puzzleGrid[i + k][j + l] - 1]) {
+						if (puzzleGrid[i + k][j + l] == 0 || !canUse[puzzleGrid[i + k][j + l] - 1]) {
 							return false;
 						}
 

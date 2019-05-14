@@ -26,6 +26,8 @@ import java.io.ObjectInputStream;
 import java.util.Date;
 import java.util.Arrays;
 import java.util.Comparator;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 public class View extends Application {
 	public static Model model;
@@ -77,14 +79,17 @@ public class View extends Application {
 				public void handle(ActionEvent event) {
 					int row = model.getSelectedIndexTuple().getFirst();
 					int col = model.getSelectedIndexTuple().getSecond();
+					Alert alert = null;
 
 					if (row == -1 || col == -1) {
-						// TODO: Alert the user that they need to select an editable cell to clear
+						alert = new Alert(AlertType.ERROR, "You have to select a cell to clear");
+						alert.showAndWait();
 						return;
 					}
 
 					if (!model.getEditableCells()[row][col]) {
-						// TODO: Alert the user that the cell that they currently have selected must be ediatble
+						alert = new Alert(AlertType.ERROR, "That cell is apart of the puzzle");
+						alert.showAndWait();
 						return;
 					}
 
@@ -146,7 +151,16 @@ public class View extends Application {
 
 		newValidateButton.setOnAction(new EventHandler<ActionEvent>() {
 				public void handle(ActionEvent event) {
-					System.out.println(model.validatePuzzle());
+					Alert alert = null;
+					boolean isGood = model.validatePuzzle();
+
+					if (isGood) {
+						alert = new Alert(AlertType.CONFIRMATION, "All Correct!");
+					} else {
+						alert = new Alert(AlertType.ERROR, "Something's wrong");
+					}
+
+					alert.showAndWait();
 				}
 			});
 
@@ -190,6 +204,9 @@ public class View extends Application {
 						// Load the selected file as the new puzzle
 						model = new Model();
 						model.loadPuzzleFromFile(selectedFile.toString());
+						if (!model.getShouldWarn()) {
+							model.toggleWarnings();
+						}
 						setUpGrid(outerGrid, outerCells, innerGrids, innerCells, model);
 						primaryStage.setScene(gameScene);
 					}
@@ -222,6 +239,10 @@ public class View extends Application {
 							fileIn.close();
 
 							setUpGrid(outerGrid, outerCells, innerGrids, innerCells, model);
+							if (!model.getShouldWarn()) {
+								model.toggleWarnings();
+							}
+
 							primaryStage.setScene(gameScene);
 
 						} catch(Exception e) {
@@ -468,23 +489,24 @@ public class View extends Application {
 						}
 
 						String num = ((Button) event.getTarget()).getText();
+						Alert alert = null;
 
 						if (!model.getEditableCells()[row][col]) {
-							// TODO: Make a pop that warns the user or even prevent the user form selecting cells that they can't edit
-							System.out.println("You can't edit that cell");
+							alert = new Alert(AlertType.ERROR, "That cell is not editable");
+							alert.showAndWait();
 							return;
 						}
 
 						if (!model.makeMove(row, col, Integer.parseInt(num))) {
-							// TODO: Make a pop up that shows that the number that's entered is not valid
+							System.out.println("The number that was passed was not valid");
 							return;
 						}
 
 						Text innerText = (Text) innerCells[row][col].getChildren().get(0);
 						innerText.setText(num);
-
 					}
 				});
+
 			buttons[i].setPrefSize(gridSize, gridSize);
 		}
 	}
